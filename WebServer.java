@@ -51,12 +51,6 @@ public class WebServer {
 			Date currentTime = cal.getTime();
 			System.out.println("New connection: "+webServerAddress+":"+remotePort+" @ "+currentTime);
 			String filename = receiveFiles(connection);
-			
-			if(filename!="Error"){
-				applyEffect(filename);
-				sendImage(urlPrefix+filename, connection);
-				ImageProc.delete(urlPrefix+filename);
-			}
 		}
 		catch(Exception e){
 			System.out.println("Error: "+e.getMessage());
@@ -66,40 +60,6 @@ public class WebServer {
 				System.out.println("Connection closed");
 			}
 		}
-	}
-	
-	private static boolean applyEffect(String filename){
-		BufferedReader br= null;
-		String effect;
-		try{
-			br = new BufferedReader(new FileReader(urlPrefix+"effect.data"));
-			effect = br.readLine();
-			ImageProc.delete(urlPrefix+"effect.data");
-			br.close();
-		}catch(IOException e){
-			System.out.println("Error: "+ e.getMessage());
-			return false;
-		}
-		boolean res=false;
-		System.out.println("Effect to be applied: "+effect);
-		
-		//Set effects here
-		if(effect.equalsIgnoreCase("Grayscale")){
-			res=ImageProc.GrayScale(urlPrefix+filename);
-		}else if(effect.equalsIgnoreCase("Blur")){
-			res=ImageProc.Blur(urlPrefix+filename);
-		}else if(effect.equalsIgnoreCase("Edge Detection")){
-			res=ImageProc.EdgeDetection(urlPrefix+filename);
-		}else if(effect.equalsIgnoreCase("Negative")){
-			res=ImageProc.Negative(urlPrefix+filename);
-		}else if(effect.equalsIgnoreCase("Sepia")){
-			res=ImageProc.Sepia(urlPrefix+filename);
-		}else if(effect.equalsIgnoreCase("Sketch")){
-			res=ImageProc.Sketch(urlPrefix+filename);
-		}else if(effect.equalsIgnoreCase("Oil Paint")){
-			res=ImageProc.OilPaint(urlPrefix+filename);
-		}
-		return res;
 	}
 	
 	private static String receiveFiles(Socket socket){
